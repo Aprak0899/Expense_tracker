@@ -161,9 +161,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
           ElevatedButton(
               onPressed: () async {
+                print(
+                    "add ${_title} ${_amount} ${dateString} cond = ${_title == "" || _amount == 0.0 || dateString == "No date chosen"}");
                 if (_title == "" ||
                     _amount == 0.0 ||
-                    dateString == "No Date Chosen") {
+                    dateString == "No date chosen") {
                   print("box");
                   await alertbox();
                 } else {

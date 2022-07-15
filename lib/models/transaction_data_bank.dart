@@ -1,5 +1,7 @@
 import 'dart:collection';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'data.dart';
 
 class TransactionDataBank extends ChangeNotifier {
@@ -118,6 +120,17 @@ class TransactionDataBank extends ChangeNotifier {
 
   // Is a HashMap
   void addItem() {
+    //remove this by rewiring widgets
+    // _TransactionList.add(data);
+    // if (!_TransactionMap.containsKey(data.date)) {
+    //   _TransactionMap.addAll({
+    //     data.date!: [data]
+    //   });
+    // } else {
+    //   _TransactionMap.update(data.date!, (value) {
+    //     return [data, ...?_TransactionMap[data.date]];
+    //   });
+    // }
     printlist(_TransactionList);
 
     if (_TransactionList.isEmpty) {
@@ -146,6 +159,27 @@ class TransactionDataBank extends ChangeNotifier {
     print(_TransactionMap);
     makeAWeek();
     weeklyData();
+    notifyListeners();
+  }
+
+  //rewire this
+  List<Data> getList() {
+    //todo
+    //take today's day as input and get that list from the map and return it
+    return _TransactionList;
+  }
+
+  Data getItemAtIndex({required int index}) {
+    return _TransactionList[index];
+  }
+
+  int getSize() {
+    return _TransactionList.length;
+  }
+
+  void deleteItemAtIndex({required int index}) {
+    //_TransactionList.removeAt(index);
+    _TransactionMap.removeWhere((key, value) => false);
     notifyListeners();
   }
 }

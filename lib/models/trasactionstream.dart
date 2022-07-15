@@ -1,21 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expanse_tracker/add_transaction_screen.dart';
 import 'package:expanse_tracker/models/transaction_data_bank.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'data.dart';
+//import '../models/data.dart';
+//import '../widgets/data_tile.dart';
+//import 'auth.dart';
+//import 'data_bank.dart';
+//import 'package:flutter/scheduler.dart';
 
 final _fireStore = FirebaseFirestore.instance;
 
 class TransactionsStream extends StatelessWidget {
+  //late User loggedInUser;
+  //contains documents from firestore
+  // List<dynamic> taskDocumentList = [];
+  // //contains task extracted from document
+  // List<Data> tempList = [];
+  // int tempListSize = 0;
   @override
   Widget build(BuildContext context) {
+    DateTime currDay = DateTime.now();
+    DateTime formattedCurrDay = currDay.subtract(Duration(
+        hours: currDay.hour,
+        minutes: currDay.minute,
+        seconds: currDay.second,
+        milliseconds: currDay.millisecond,
+        microseconds: currDay.microsecond));
+    //loggedInUser = Provider.of<Auth>(context).getLoggedInUser()!;
     return StreamBuilder<QuerySnapshot>(
         stream: _fireStore
             .collection('Transaction')
             .orderBy('timestamp')
             .snapshots(),
         builder: (context, snapshot) {
+          //===>> note ====> do not declare this outside this builder as a property of this class .
+          //this will affect the real time upation of the list
           List<dynamic> transactionDocumentList = [];
           //contains task extracted from document
           List<Data> tempList = [];
@@ -29,6 +52,14 @@ class TransactionsStream extends StatelessWidget {
           if (snapshot.hasData) {
             print("no data");
           }
+          // if (!snapshot.hasData || loggedInUser == null) {
+          //   return Center(
+          //     child: CircularProgressIndicator(
+          //       backgroundColor: Colors.lightBlueAccent,
+          //     ),
+          //   );
+          // }
+          //print(" CPI = ${loggedInUser.email}");
           //taskDataSnapshot contains zero or more [DocumentSnapshot] objects.
           final taskDataSnapshot = snapshot.data?.docs.reversed;
           print("last");
@@ -38,13 +69,14 @@ class TransactionsStream extends StatelessWidget {
                 () => Provider.of<TransactionDataBank>(context, listen: false)
                     .clearDailyTotal());
           }
-          taskDataSnapshot.map((i) {
+          for (var i in taskDataSnapshot) {
             Map<String, dynamic> data = i.data()! as Map<String, dynamic>;
             data['id'] = i.id;
             print(data);
             //adding doc one by one to the list
             transactionDocumentList.add(data);
-          });
+            //transactionDocumentList = [...transactionDocumentList, data];
+          }
           for (var document in transactionDocumentList) {
             final taskTitle = document["title"];
             //final taskOwner = document["email"];
@@ -63,7 +95,23 @@ class TransactionsStream extends StatelessWidget {
               Duration(milliseconds: 500),
               () => Provider.of<TransactionDataBank>(context, listen: false)
                   .setTransactionList(tempList));
+
+          void printlist(List<Data> list) {
+            for (Data i in tempList) {
+              print("title = ${i.title} time = ${i.date} id = ${i.id}");
+            }
+          }
+
+          print(" ===================start templist => ++++++++++++++++ ");
+          printlist(tempList);
+          print("================  end templist => ++++++++++++++++ ");
           tempListSize = tempList.length;
+
+          // Future.delayed(
+          //     Duration(milliseconds: 500),
+          //     () => Provider.of<DataBank>(context, listen: false)
+          //         .setCount(tempListSize));
+
           print("task size =${tempListSize}");
           return ListView.builder(
               itemCount: tempListSize,
@@ -150,3 +198,27 @@ class TransactionsStream extends StatelessWidget {
         });
   }
 }
+
+// ListView.builder(
+// padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+// itemBuilder: (context, index) => DataTile(
+// //dataTitle: dataBank.getDataAtIndex(index).title,
+// dataTitle: tempList[index].title,
+// //isChecked: dataBank.getDataAtIndex(index).status,
+// isChecked: tempList[index].status,
+// checkboxCallback: (checkboxState) {
+// //dataBank.updateData(dataBank.getDataAtIndex(index));
+// print("form CB = ${tempList[index].timestamp}");
+// },
+// longPressCallback: () {
+// _fireStore
+//     .collection('TaskList')
+//     .doc(tempList[index].id)
+//     .delete()
+//     .then((value) => print('User Deleted'))
+//     .catchError(
+// (error) => print('Failed to Delete user: $error'));
+// },
+// ),
+// itemCount: tempListSize,
+// );

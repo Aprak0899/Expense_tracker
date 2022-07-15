@@ -100,43 +100,78 @@ class BarChartSample1State extends State<BarChartSample1> {
             return makeGroupData(
                 0,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[0],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[0],
                 isTouched: i == touchedIndex);
           case 1:
             return makeGroupData(
                 1,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[1],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[1],
                 isTouched: i == touchedIndex);
           case 2:
             return makeGroupData(
                 2,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[2],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[2],
                 isTouched: i == touchedIndex);
           case 3:
             return makeGroupData(
                 3,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[3],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[3],
                 isTouched: i == touchedIndex);
           case 4:
             return makeGroupData(
                 4,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[4],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[4],
                 isTouched: i == touchedIndex);
           case 5:
             return makeGroupData(
                 5,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[5],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[5],
                 isTouched: i == touchedIndex);
           case 6:
             return makeGroupData(
                 6,
                 Provider.of<TransactionDataBank>(context)
-                    .getDailyTotalList()[6],
+                            .getDailyTotalList()
+                            .length ==
+                        0
+                    ? 0
+                    : Provider.of<TransactionDataBank>(context)
+                        .getDailyTotalList()[6],
                 isTouched: i == touchedIndex);
           default:
             return throw Error();
@@ -188,7 +223,8 @@ class BarChartSample1State extends State<BarChartSample1> {
                 children: <TextSpan>[
                   TextSpan(
                     //rod length on y axis
-                    text: (rod.toY - 1).toString(),
+                    text:
+                        "${double.parse(((rod.toY - 1) * 10).toStringAsFixed(2)).toString()} %",
                     style: const TextStyle(
                       color: Colors.yellow,
                       fontSize: 16,

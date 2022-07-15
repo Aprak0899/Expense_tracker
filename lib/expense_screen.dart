@@ -1,4 +1,5 @@
 import 'package:expanse_tracker/add_transaction_screen.dart';
+import 'package:expanse_tracker/models/trasactionstream.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -45,73 +46,7 @@ class ExpenseScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                    itemCount:
-                        Provider.of<TransactionDataBank>(context).getSize(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0, 5.0), //(x,y)
-                              blurRadius: 5.0,
-                            ),
-                          ],
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              child: Text(
-                                "Rs.${Provider.of<TransactionDataBank>(context).getItemAtIndex(index: index).amount}",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${Provider.of<TransactionDataBank>(context).getItemAtIndex(index: index).title}",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      "${Provider.of<TransactionDataBank>(context).getItemAtIndex(index: index).date}",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                                onTap: () {
-                                  print("bin me $index");
-                                  Provider.of<TransactionDataBank>(context,
-                                          listen: false)
-                                      .deleteItemAtIndex(index: index);
-                                },
-                                child: Icon(Icons.delete)),
-                          ],
-                        ),
-                      );
-                    }),
+                child: TransactionsStream(),
               ),
             )
           ],
@@ -170,3 +105,73 @@ class ExpenseScreen extends StatelessWidget {
 // swapAnimationDuration: Duration(milliseconds: 150), // Optional
 // swapAnimationCurve: Curves.linear,
 // ),
+
+//==========listviewbuilder that uses provider for data ======================
+//
+// ListView.builder(
+// itemCount:
+// Provider.of<TransactionDataBank>(context).getSize(),
+// itemBuilder: (context, index) {
+// return Container(
+// margin: EdgeInsets.symmetric(vertical: 5),
+// decoration: BoxDecoration(
+// color: Colors.white,
+// borderRadius: BorderRadius.circular(12),
+// boxShadow: [
+// BoxShadow(
+// color: Colors.grey,
+// offset: Offset(0.0, 5.0), //(x,y)
+// blurRadius: 5.0,
+// ),
+// ],
+// ),
+// padding:
+// EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+// child: Row(
+// //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// children: [
+// CircleAvatar(
+// radius: 30,
+// child: Text(
+// "Rs.${Provider.of<TransactionDataBank>(context).getItemAtIndex(index: index).amount}",
+// textAlign: TextAlign.center,
+// style: TextStyle(
+// fontSize: 14,
+// fontWeight: FontWeight.normal),
+// ),
+// ),
+// Expanded(
+// child: Container(
+// padding: EdgeInsets.symmetric(horizontal: 20),
+// child: Column(
+// crossAxisAlignment: CrossAxisAlignment.start,
+// children: [
+// Text(
+// "${Provider.of<TransactionDataBank>(context).getItemAtIndex(index: index).title}",
+// style: TextStyle(
+// fontSize: 18,
+// fontWeight: FontWeight.w700),
+// ),
+// SizedBox(height: 5),
+// Text(
+// "${Provider.of<TransactionDataBank>(context).getItemAtIndex(index: index).date}",
+// style: TextStyle(
+// fontSize: 12,
+// fontWeight: FontWeight.w400),
+// ),
+// ],
+// ),
+// ),
+// ),
+// GestureDetector(
+// onTap: () {
+// print("bin me $index");
+// Provider.of<TransactionDataBank>(context,
+// listen: false)
+//     .deleteItemAtIndex(index: index);
+// },
+// child: Icon(Icons.delete)),
+// ],
+// ),
+// );
+// })

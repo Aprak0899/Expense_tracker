@@ -8,55 +8,32 @@ class TransactionDataBank extends ChangeNotifier {
   List<Data> _TransactionList = [];
   Map<DateTime, List<Data>> _TransactionMap = HashMap();
   //working
-  Map<DateTime, double> _DailyTotalTransactionMap = HashMap();
-  //works from method makeAWeek()
-  //now base on this list you need to fetch daily total from the map if that date is available if not then pass 0
-  //List<DateTime> weekList = [];
-  Map<int, DateTime?> _weekList = HashMap();
-  //List<double> dailyTotal = [];
-  Map<int, double> _dailyTotal = HashMap();
+  void setTransactionList(List<Data> list) {
+    _TransactionList = list;
+    notifyListeners();
+    addItem();
+  }
+
   //get daily total for the dates from weeklist from dailytotal map
-  List<double> getDailyTotalList() {
-    List<double> result = _dailyTotal.entries.map((e) => e.value).toList();
-    double total =
-        result.fold<double>(0, (double sum, double item) => sum + item);
-    for (int k = 0; k < result.length; k++) {
-      result[k] = (result[k] / total) * 10;
-    }
-    return result;
-  }
-
-  void weeklyData() {
-    print(
-        "========== weeklist lenght ${_weekList.length} ====================");
-    _dailyTotal = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0};
-    double? x = 0.0;
-    for (int i = 0; i < _weekList.length; i++) {
-      if (_DailyTotalTransactionMap.containsKey(_weekList[i])) {
-        x = _DailyTotalTransactionMap[_weekList[i]];
-      } else {
-        x = 0.0;
-      }
-      _dailyTotal.update(i, (value) => x!);
-    }
-    print("dailyTotal= ${_dailyTotal}");
-  }
-
-  //give a proper name
+  Map<DateTime, double> _DailyTotalTransactionMap = HashMap();
+  //total for a day in general
   void getDailyTotal() {
     _TransactionMap.forEach((key, value) {
       //date=>[Data,Data...] data in that list is getting summed up
       // below ouptut is date=>sum
       //put this in dailytotal map
       double total =
-          value.fold<double>(0, (double sum, Data item) => sum + item.amount);
+          value.fold<double>(0, (double sum, Data item) => sum + item.amount!);
       _DailyTotalTransactionMap.update(key, (value) => total,
           ifAbsent: () => total);
     });
+    //sort the map in ascending order by datewise
     final mapOf = SplayTreeMap<DateTime, double>.of(_DailyTotalTransactionMap);
     print("DailyTotal Map ${mapOf}");
   }
 
+  //works from method makeAWeek()
+  Map<int, DateTime?> _weekList = HashMap();
   void makeAWeek() {
     _weekList = {0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null};
     //get today's date
@@ -101,22 +78,84 @@ class TransactionDataBank extends ChangeNotifier {
     // i.e M T => |1-dayno.| => expected output = |1-3=-2|=2
   }
 
+  //daily total for the curr week
+  Map<int, double> _dailyTotal = HashMap();
+  void weeklyData() {
+    print(
+        "========== weeklist lenght ${_weekList.length} ====================");
+    _dailyTotal = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0};
+    double? x = 0.0;
+    for (int i = 0; i < _weekList.length; i++) {
+      if (_DailyTotalTransactionMap.containsKey(_weekList[i])) {
+        x = _DailyTotalTransactionMap[_weekList[i]];
+      } else {
+        x = 0.0;
+      }
+      _dailyTotal.update(i, (value) => x!);
+    }
+    print("dailyTotal= ${_dailyTotal}");
+  }
+
+  void clearDailyTotal() {
+    _dailyTotal.clear();
+    notifyListeners();
+  }
+
+  List<double> getDailyTotalList() {
+    List<double> result = _dailyTotal.entries.map((e) => e.value).toList();
+    double total =
+        result.fold<double>(0, (double sum, double item) => sum + item);
+    for (int k = 0; k < result.length; k++) {
+      result[k] = (result[k] / total) * 10;
+    }
+    return result;
+  }
+
+  //give a proper name
+  void printlist(List<Data> list) {
+    for (Data i in list) {
+      print("from bank = title = ${i.title} time = ${i.amount} id = ${i.id}");
+    }
+  }
+
   // Is a HashMap
-  void addItem({required Data data}) {
+  void addItem() {
     //remove this by rewiring widgets
-    _TransactionList.add(data);
-    if (!_TransactionMap.containsKey(data.date)) {
-      _TransactionMap.addAll({
-        data.date: [data]
-      });
-    } else {
-      _TransactionMap.update(data.date, (value) {
-        return [data, ...?_TransactionMap[data.date]];
-      });
+    // _TransactionList.add(data);
+    // if (!_TransactionMap.containsKey(data.date)) {
+    //   _TransactionMap.addAll({
+    //     data.date!: [data]
+    //   });
+    // } else {
+    //   _TransactionMap.update(data.date!, (value) {
+    //     return [data, ...?_TransactionMap[data.date]];
+    //   });
+    // }
+    printlist(_TransactionList);
+
+    if (_TransactionList.isEmpty) {
+      return;
+    }
+    _TransactionMap.clear();
+    _DailyTotalTransactionMap.clear();
+    _dailyTotal.clear();
+    for (int i = 0; i < _TransactionList.length; i++) {
+      if (!_TransactionMap.containsKey(_TransactionList[i].date)) {
+        _TransactionMap.addAll({
+          _TransactionList[i].date!: [_TransactionList[i]]
+        });
+      } else {
+        _TransactionMap.update(_TransactionList[i].date!, (value) {
+          return [
+            _TransactionList[i],
+            ...?_TransactionMap[_TransactionList[i].date]
+          ];
+        });
+      }
     }
     getDailyTotal();
     //this is how you gate the day of the week 0-Monday ...
-    print("task day = ${data.date.weekday}");
+    //print("task day = ${_TransactionList[i].date!.weekday}");
     print(_TransactionMap);
     makeAWeek();
     weeklyData();
@@ -140,7 +179,7 @@ class TransactionDataBank extends ChangeNotifier {
 
   void deleteItemAtIndex({required int index}) {
     //_TransactionList.removeAt(index);
-    _TransactionMap.removeWhere((key, value) => false)
+    _TransactionMap.removeWhere((key, value) => false);
     notifyListeners();
   }
 }

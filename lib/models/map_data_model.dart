@@ -9,7 +9,7 @@ class MapData {
   }
   void setTotal({required List<Data> tlist}) {
     this.total =
-        tlist.fold<double>(0, (double sum, Data item) => sum + item.amount);
+        tlist.fold<double>(0, (double sum, Data item) => sum + item.amount!);
     print("total = ${total}");
   }
 }

@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expanse_tracker/models/data.dart';
 import 'package:expanse_tracker/models/transaction_data_bank.dart';
 import 'package:flutter/material.dart';
@@ -5,16 +8,45 @@ import 'package:provider/provider.dart';
 import 'constants.dart';
 import 'package:intl/intl.dart';
 
+final _fireStore = FirebaseFirestore.instance.collection("Transaction");
+
 class AddTaskScreen extends StatefulWidget {
+  String? id;
+  AddTaskScreen({this.id});
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  bool flagUpdate = false;
   String _title = "";
   double _amount = 0.0;
   String dateString = "No date chosen";
   DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    if (widget.id != null) {
+      setState(() {
+        flagUpdate = true;
+      });
+      setData(widget.id!);
+    }
+  }
+
+  void setData(String id) {
+    _fireStore.doc(id).get().then((DocumentSnapshot snapshot) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      print("add_set map = ${data['title']}");
+      setState(() {
+        _title = data['title'];
+        _amount = data['amount'];
+        selectedDate = data['timestamp'].toDate();
+        dateString = DateFormat.yMd().format(data['timestamp'].toDate());
+      });
+      print("ti ${_title} ${_amount} ${selectedDate.toString()} ${dateString}");
+    }, onError: (e) => print("Error getting document: $e"));
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -45,11 +77,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ), //cancel
           TextButton(
             onPressed: () {
-              // setState(() {
-              //   _title = "";
-              //   _amount = 0.0;
-              //   dateString = "No Date Chosen";
-              // });
               Navigator.pop(context, 'OK');
               Navigator.pop(context);
             },
@@ -62,6 +89,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "from widget ${_title} ${_amount} ${selectedDate.toString()} ${dateString}");
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       color: Colors.white,
@@ -139,12 +169,31 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 } else {
                   print(
                       "submit => title = $_title amt = $_amount date = $dateString");
-                  Provider.of<TransactionDataBank>(context, listen: false)
-                      .addItem(
-                          data: Data(
-                              title: _title,
-                              amount: _amount,
-                              date: selectedDate));
+                  // Provider.of<TransactionDataBank>(context, listen: false)
+                  //     .addItem(
+                  //         data: Data(
+                  //             title: _title,
+                  //             amount: _amount,
+                  //             date: selectedDate));
+                  if (flagUpdate) {
+                    _fireStore
+                        .doc(widget.id)
+                        .update({
+                          "amount": _amount,
+                          "title": _title,
+                          "timestamp": selectedDate
+                        })
+                        .then((value) => print("User Updated"))
+                        .catchError(
+                            (error) => print("Failed to update user: $error"));
+                  } else {
+                    _fireStore.add({
+                      "title": _title,
+                      "amount": _amount,
+                      "timestamp": selectedDate
+                    });
+                  }
+
                   Navigator.pop(context);
                 }
               },

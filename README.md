@@ -1,16 +1,14 @@
 # expanse_tracker
 
-A new Flutter project.
+an app that keeps track of your expenses and gives you an insight using a barchart
+
+## features
+
+- allows basic CRUD operation
+- allows user to visualize their expenses over a week by calculating expenditure for the day / total expenditure of that week
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+clone the repo
+open pubspec.yaml => pub get => pub upgrade
+run the app 

@@ -1,6 +1,6 @@
 class Data {
   String title;
-  String date;
+  DateTime date;
   double amount;
   Data({required this.title, required this.amount, required this.date});
 }

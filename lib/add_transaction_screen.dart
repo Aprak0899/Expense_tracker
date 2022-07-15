@@ -13,7 +13,7 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   String _title = "";
   double _amount = 0.0;
-  String dateString = "No Date Chosen";
+  String dateString = "No date chosen";
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -144,7 +144,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           data: Data(
                               title: _title,
                               amount: _amount,
-                              date: dateString));
+                              date: selectedDate));
                   Navigator.pop(context);
                 }
               },

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:expanse_tracker/models/transaction_data_bank.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 extension ColorExtension on Color {
   /// Convert the color to a darken color based on the [percent]
@@ -95,19 +97,47 @@ class BarChartSample1State extends State<BarChartSample1> {
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
         switch (i) {
           case 0:
-            return makeGroupData(0, 5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                0,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[0],
+                isTouched: i == touchedIndex);
           case 1:
-            return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                1,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[1],
+                isTouched: i == touchedIndex);
           case 2:
-            return makeGroupData(2, 5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                2,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[2],
+                isTouched: i == touchedIndex);
           case 3:
-            return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                3,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[3],
+                isTouched: i == touchedIndex);
           case 4:
-            return makeGroupData(4, 9, isTouched: i == touchedIndex);
+            return makeGroupData(
+                4,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[4],
+                isTouched: i == touchedIndex);
           case 5:
-            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                5,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[5],
+                isTouched: i == touchedIndex);
           case 6:
-            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                6,
+                Provider.of<TransactionDataBank>(context)
+                    .getDailyTotalList()[6],
+                isTouched: i == touchedIndex);
           default:
             return throw Error();
         }

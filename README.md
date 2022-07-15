@@ -1,4 +1,4 @@
-# expanse_tracker (Flutter App)
+# Expenditure_tracker (Flutter App)
 
 A flutter based app that keeps track of your expenses and gives you an insight using a barchart
 

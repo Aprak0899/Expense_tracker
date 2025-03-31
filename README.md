@@ -1,18 +1,19 @@
-# Expenditure_tracker (Flutter App)
+# 💸 Expenditure Tracker (Flutter App)
 
-A flutter based app that keeps track of your expenses and gives you an insight using a barchart
+## 📱 Overview
+The **Expenditure Tracker** is a **Flutter-based mobile application** that helps users manage and track their daily expenses. It provides insightful visualizations using **bar charts**, allowing users to understand their spending habits over time.
 
-## features
+## ✨ Features
+- ✅ **CRUD Operations**: Create, Read, Update, and Delete expenses.
+- 📊 **Weekly Expense Visualization**: Displays daily and total weekly expenditures using an interactive bar chart.
+- ⚡ **User-Friendly Interface**: Simple and intuitive UI for easy tracking.
 
-- allows basic CRUD operation
-- allows user to visualize their expenses over a week by calculating expenditure for the day / total expenditure of that week
+## 🚀 Getting Started
+Follow these steps to set up and run the application:
 
-## Getting Started
-
-- clone the repo
-- open pubspec.yaml => pub get => pub upgrade
-- run the app 
-</BR>
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Aprak0899/Expense_tracker.git
 
 ## screenshots
 <span>
